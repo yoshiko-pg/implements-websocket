@@ -4,7 +4,9 @@ const clientScript = () => {
   const ws = new WebSocket("ws://localhost:8080");
 
   ws.addEventListener("open", function (event) {
-    ws.send("hello");
+    ws.send(
+      "色は匂へど　散りぬるを 我が世誰そ　常ならむ 有為の奥山　今日越えて 浅き夢見じ　酔ひもせず"
+    );
 
     let count = 0;
     const id = setInterval(() => {
