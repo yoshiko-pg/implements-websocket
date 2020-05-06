@@ -31,7 +31,7 @@ const html = `
 <body>
   <h1>WS test</h1>
   <form action="#" method="post" id="form">
-    <input type="text" name="chat" id="chat" style="width: 50%;" />
+    <input type="text" name="chat" id="chat" style="width: 50%;" placeholder="なにか書いて送信" />
     <button>送信</button>
   </form>
   <ul id="log">
