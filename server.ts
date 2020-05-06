@@ -1,6 +1,8 @@
 import * as http from "http";
 import * as crypto from "crypto";
+
 import bufferParser from "./bufferParser";
+import bufferCreator from "./bufferCreator";
 
 const GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
@@ -26,6 +28,11 @@ export default (server: http.Server) => {
     socket.on("data", (data) => {
       const text = bufferParser(data);
       console.log("受信", text);
+
+      const message1 = bufferCreator(`メッセージ「${text}」を受信しました`);
+      socket.write(message1);
+      const message2 = bufferCreator(`文字数は ${text.length} 文字でした`);
+      socket.write(message2);
     });
 
     socket.on("close", (e) => {
