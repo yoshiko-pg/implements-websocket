@@ -29,10 +29,15 @@ export default (server: http.Server) => {
       const text = bufferParser(data);
       console.log("受信", text);
 
-      const message1 = bufferCreator(`メッセージ「${text}」を受信しました`);
-      socket.write(message1);
-      const message2 = bufferCreator(`文字数は ${text.length} 文字でした`);
-      socket.write(message2);
+      setTimeout(() => {
+        const message1 = bufferCreator(`メッセージ「${text}」を受信しました`);
+        socket.write(message1);
+      }, 300);
+
+      setTimeout(() => {
+        const message2 = bufferCreator(`文字数は ${text.length} 文字でした`);
+        socket.write(message2);
+      }, 600);
     });
 
     socket.on("close", (e) => {
