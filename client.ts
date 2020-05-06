@@ -2,26 +2,21 @@ import * as http from "http";
 
 const clientScript = () => {
   const ws = new WebSocket("ws://localhost:8080");
-
-  ws.addEventListener("open", function (event) {
-    ws.send(
-      "色は匂へど　散りぬるを 我が世誰そ　常ならむ 有為の奥山　今日越えて 浅き夢見じ　酔ひもせず"
-    );
-
-    let count = 0;
-    const id = setInterval(() => {
-      count++;
-      if (count > 10) {
-        clearInterval(id);
-        return;
-      }
-      ws.send(`message ${count}`);
-    }, 1000);
-  });
+  const log = document.getElementById("log");
+  const form = document.getElementById("form");
+  const chat = document.getElementById("chat") as HTMLInputElement;
 
   // メッセージの待ち受け
   ws.addEventListener("message", function (event) {
-    console.log("message from server", event.data);
+    const li = document.createElement("li");
+    li.innerText = `from server: ${event.data}`;
+    log.appendChild(li);
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    ws.send(chat.value);
+    chat.value = "";
   });
 };
 
@@ -32,10 +27,16 @@ const html = `
   <meta charset="UTF-8" />
   <title>WS test</title>
   <meta http-equiv="Cache-Control" content="no-store" />
-  <script>(${clientScript}())</script>
 </head>
 <body>
   <h1>WS test</h1>
+  <form action="#" method="post" id="form">
+    <input type="text" name="chat" id="chat" style="width: 50%;" />
+    <button>送信</button>
+  </form>
+  <ul id="log">
+  </ul>
+  <script>(${clientScript}())</script>
 </body>
 </html>
 `;
