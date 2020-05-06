@@ -34,7 +34,6 @@ const html = `
 </head>
 <body>
   <h1>WS test</h1>
-  <p></p>
 </body>
 </html>
 `;

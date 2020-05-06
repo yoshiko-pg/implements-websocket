@@ -11,18 +11,23 @@ const createKey = (clientKey: string) =>
     .digest("base64");
 
 export default (server: http.Server) => {
-  server.on("upgrade", function (req, socket, head) {
-    socket.write(`HTTP/1.1 101 Switching Protocols
-Upgrade: websocket
-Connection: Upgrade
-Sec-WebSocket-Accept: ${createKey(req.headers["sec-websocket-key"])}
-
-`);
+  server.on("upgrade", function (req, socket) {
+    socket.write(
+      [
+        "HTTP/1.1 101 Switching Protocols",
+        "Upgrade: websocket",
+        "Connection: Upgrade",
+        `Sec-WebSocket-Accept: ${createKey(req.headers["sec-websocket-key"])}`,
+        "",
+        "",
+      ].join("\r\n")
+    );
 
     socket.on("data", (data) => {
       const text = bufferParser(data);
       console.log("受信", text);
     });
+
     socket.on("close", (e) => {
       console.log("closed");
     });
