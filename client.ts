@@ -1,23 +1,29 @@
 import * as http from "http";
 
-export default (server: http.Server) => {
-  const clientScript = () => {
-    const ws = new WebSocket("ws://localhost:8080");
+const clientScript = () => {
+  const ws = new WebSocket("ws://localhost:8080");
 
-    // 接続が開いたときのイベント
-    ws.addEventListener("open", function (event) {
-      ws.send("Hello Server!");
-    });
+  ws.addEventListener("open", function (event) {
+    ws.send("hello");
 
-    // メッセージの待ち受け
-    ws.addEventListener("message", function (event) {
-      console.log("message from server", event.data);
-    });
-  };
+    let count = 0;
+    const id = setInterval(() => {
+      count++;
+      if (count > 10) {
+        clearInterval(id);
+        return;
+      }
+      ws.send(`message ${count}`);
+    }, 1000);
+  });
 
-  server.on("request", function (req, res) {
-    res.writeHead(200, { "Content-Type": "text/html" });
-    res.write(`
+  // メッセージの待ち受け
+  ws.addEventListener("message", function (event) {
+    console.log("message from server", event.data);
+  });
+};
+
+const html = `
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,7 +37,11 @@ export default (server: http.Server) => {
   <p></p>
 </body>
 </html>
-  `);
-    res.end();
+`;
+
+export default (server: http.Server) => {
+  server.on("request", function (req, res) {
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.end(html);
   });
 };
